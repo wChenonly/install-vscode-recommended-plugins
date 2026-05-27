@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["jsdoc", "vitest", "node", "promise", "import"],
+  "rules": {
+    "vitest/no-conditional-expect": "off",
+    "vitest/no-focused-tests": "off",
+    "vitest/warn-todo": "off",
+    "vitest/hoisted-apis-on-top": "off",
+    "jest/no-disabled-tests": "off",
+    "curly": ["error", "all"]
+  }
+}

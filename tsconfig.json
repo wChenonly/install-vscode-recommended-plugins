@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
-    "lib": ["DOM", "ESNext"],
-    "allowJs": true,
-    "module": "ESNext",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
     "jsx": "preserve",
-    "experimentalDecorators": true,
+    "strict": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "skipLibCheck": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node",
-    "baseUrl": "./",
-    "outDir": "./dist",
-    "declaration": true
-  },
-  "include": ["src"],
-  "$schema": "https://json.schemastore.org/tsconfig"
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "strictFunctionTypes": true,
+    "isolatedDeclarations": true,
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
+    "types": ["node"]
+  }
 }

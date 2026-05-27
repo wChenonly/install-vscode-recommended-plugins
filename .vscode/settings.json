@@ -1,0 +1,9 @@
+{
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "typescript.tsdk": "node_modules/@typescript/native-preview/lib",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "always"
+  },
+  "oxc.enable": true,
+  "oxc.typeAware": true
+}

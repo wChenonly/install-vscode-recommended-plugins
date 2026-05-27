@@ -5,56 +5,112 @@ import { logger } from 'rslog'
 
 const P = '[install-vscode-recommended-plugin]: '
 
+const EDITOR_COMMANDS = [
+  'code',
+
+  // Cursor
+  'cursor',
+
+  // Trae
+  'trae',
+  'trae-cn',
+
+  // Qoder
+  'qoder',
+  'qoder-cn'
+]
+
 const getPluginsFromJson = async () => {
   try {
     const filePath = join(process.cwd(), '.vscode', 'extensions.json')
+
     const data = await fsPromises.readFile(filePath, 'utf-8')
-    const json = JSON.parse(data) as { recommendations?: string[] }
+
+    const json = JSON.parse(data) as {
+      recommendations?: string[]
+    }
+
     return json.recommendations || []
   } catch (error) {
     logger.error(`${P} Error reading extensions.json:`, error)
+
     return []
   }
 }
 
-const installPlugin = (plugin: string) => {
-  return new Promise((resolve, reject) => {
-    exec(`code --install-extension ${plugin}`, (error, _stdout, stderr) => {
+const installWithCommand = (command: string, plugin: string) => {
+  return new Promise<void>((resolve, reject) => {
+    exec(`${command} --install-extension ${plugin}`, (error, _stdout, stderr) => {
       if (error) {
-        reject(`${P} Error installing ${plugin}: ${stderr}`)
-      } else {
-        resolve(`${P} Installed ${plugin}`)
+        reject(stderr || error.message)
+        return
       }
+
+      resolve()
     })
   })
 }
 
+const installPlugin = async (plugin: string) => {
+  for (const command of EDITOR_COMMANDS) {
+    try {
+      await installWithCommand(command, plugin)
+
+      logger.success(`${P} Installed ${plugin} via ${command}`)
+
+      return true
+    } catch {}
+  }
+
+  return false
+}
+
 const installPlugins = async () => {
   const plugins = await getPluginsFromJson()
-  if (plugins.length === 0) return
 
-  const failedPlugins: undefined | string[] = []
+  if (plugins.length === 0) {
+    return
+  }
+
+  const failedPlugins: string[] = []
   let successfulInstalls = 0
-  let isError = false
+  let hasMissingEditorCli = false
 
   for (const plugin of plugins) {
-    try {
-      await installPlugin(plugin)
-      logger.success(`${P} Installed ${plugin}`)
+    const installed = await installPlugin(plugin)
+
+    if (installed) {
       successfulInstalls++
-    } catch (error) {
-      isError = true
-      if (error?.toString().includes('command not found')) {
-        logger.error(`${P} please make sure you have the code command available in your PATH
-          see https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line`)
-        break
-      }
-      failedPlugins?.push(plugin)
+    } else {
+      hasMissingEditorCli = true
+      failedPlugins.push(plugin)
     }
   }
 
-  if (failedPlugins?.length === 0 && !isError) {
+  if (successfulInstalls > 0) {
     logger.greet(`${P} Installed a total of ${successfulInstalls} plug-ins.`)
+  }
+
+  if (hasMissingEditorCli) {
+    logger.error(`
+${P} No supported editor CLI found.
+
+Tried commands:
+${EDITOR_COMMANDS.map(cmd => `- ${cmd}`).join('\n')}
+
+Please open your editor and:
+
+1. Press Ctrl + Shift + P
+2. Search:
+   Shell Command: Install '<editor>' command in PATH
+
+If your editor is not supported yet, please create an issue:
+https://github.com/wChenonly/install-vscode-recommended-plugins
+`)
+  }
+
+  if (failedPlugins.length > 0) {
+    logger.warn(`${P} Failed plugins: ${failedPlugins.join(', ')}`)
   }
 }
 

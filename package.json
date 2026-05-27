@@ -1,70 +1,73 @@
 {
   "name": "install-vscode-recommended-plugins",
   "version": "0.0.8",
-  "packageManager": "pnpm@9.12.1",
   "description": "force installation of recommended plugins in .vscode/extensions.json",
-  "author": "wChenonly",
-  "type": "module",
-  "license": "MIT",
+  "keywords": [
+    "auto",
+    "cli",
+    "extension",
+    "force",
+    "install",
+    "npx",
+    "plugin",
+    "recommended",
+    "vscode"
+  ],
   "homepage": "https://github.com/wChenonly/install-vscode-recommended-plugins",
+  "bugs": "https://github.com/wChenonly/install-vscode-recommended-plugins/issues",
+  "license": "MIT",
+  "author": "wChenonly",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wChenonly/install-vscode-recommended-plugins.git"
   },
-  "bugs": "https://github.com/wChenonly/install-vscode-recommended-plugins/issues",
-  "keywords": [
-    "vscode",
-    "extension",
-    "plugin",
-    "recommended",
-    "auto",
-    "install",
-    "force",
-    "cli",
-    "npx"
-  ],
   "bin": {
-    "install-vscode-recommended-plugins": "bin/index.js"
+    "install-vscode-recommended-plugins": "bin/index.mjs"
   },
-  "exports": {
-    ".": {
-      "import": "./dist/index.js"
-    }
-  },
-  "main": "./dist/index.js",
   "files": [
     "dist"
   ],
-  "engines": {
-    "node": ">=12"
-  },
-  "scripts": {
-    "start": "nr build && node dist/index.js",
-    "build": "tsup",
-    "release": "bumpp  --commit 'release: install-vscode-recommended-plugins v'"
-  },
-  "dependencies": {
-    "rslog": "^1.2.3"
-  },
-  "devDependencies": {
-    "@antfu/ni": "^0.23.0",
-    "@types/node": "^22.7.5",
-    "bumpp": "^9.7.1",
-    "nano-staged": "^0.8.0",
-    "picocolors": "^1.1.0",
-    "pnpm": "^9.12.1",
-    "prettier": "^3.3.3",
-    "simple-git-hooks": "^2.11.1",
-    "tsup": "^8.3.0",
-    "typescript": "^5.6.3"
-  },
-  "nano-staged": {
-    "*.{ts,tsx,js,jsx,md}": "prettier --write"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "npx nano-staged"
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs"
+    }
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
-  }
+  },
+  "scripts": {
+    "start": "nr build && node dist/index.mjs",
+    "build": "tsdown",
+    "preinstall": "npx only-allow pnpm",
+    "release": "bumpp  --commit 'release: install-vscode-recommended-plugins v'"
+  },
+  "dependencies": {
+    "rslog": "^2.1.1"
+  },
+  "devDependencies": {
+    "@antfu/ni": "^30.1.0",
+    "@types/node": "^25.9.1",
+    "bumpp": "^11.1.0",
+    "nano-staged": "^1.0.2",
+    "oxfmt": "^0.52.0",
+    "oxlint": "^1.66.0",
+    "oxlint-tsgolint": "^0.23.0",
+    "picocolors": "^1.1.1",
+    "simple-git-hooks": "^2.13.1",
+    "tsdown": "^0.22.0",
+    "typescript": "^6.0.3"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm exec nano-staged"
+  },
+  "nano-staged": {
+    "**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx,vue,astro,svelte}": "oxlint",
+    "*": "oxfmt --no-error-on-unmatched-pattern"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "packageManager": "pnpm@11.3.0"
 }
