@@ -1,6 +1,6 @@
 {
   "name": "install-vscode-recommended-plugins",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "force installation of recommended plugins in .vscode/extensions.json",
   "keywords": [
     "auto",
